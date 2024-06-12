@@ -1,0 +1,55 @@
+import numpy as np
+
+# Método de Newton
+def newton_method(f, df, x0, tol=1e-5, max_iter=100):
+    x = x0
+    for i in range(max_iter):
+        x_new = x - f(x) / df(x)
+        if abs(x_new - x) < tol:
+            return x_new
+        x = x_new
+    raise ValueError("El método de Newton no convergió")
+
+# Método de la Secante
+def secant_method(f, x0, x1, tol=1e-5, max_iter=100):
+    for i in range(max_iter):
+        if abs(f(x1) - f(x0)) < tol:
+            raise ValueError("División por cero en el método de la secante")
+        x_new = x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0))
+        if abs(x_new - x1) < tol:
+            return x_new
+        x0, x1 = x1, x_new
+    raise ValueError("El método de la secante no convergió")
+
+# Problema a
+f_a = lambda x: 3*x - np.exp(x)
+df_a = lambda x: 3 - np.exp(x)
+
+# Problema b
+f_b = lambda x: 2*x + 3 * np.cos(x) - np.exp(x)
+df_b = lambda x: 2 - 3 * np.sin(x) - np.exp(x)
+
+# Soluciones para el problema a
+x0_a = 1.0  # Valor inicial para Newton
+x1_a = 1.0  # Primer valor inicial para Secante
+x2_a = 2.0  # Segundo valor inicial para Secante
+
+sol_a_newton = newton_method(f_a, df_a, x0_a)
+sol_a_secant = secant_method(f_a, x1_a, x2_a)
+
+# Soluciones para el problema b
+x0_b = 1.0  # Valor inicial para Newton
+x1_b = 1.0  # Primer valor inicial para Secante
+x2_b = 2.0  # Segundo valor inicial para Secante
+
+sol_b_newton = newton_method(f_b, df_b, x0_b)
+sol_b_secant = secant_method(f_b, x1_b, x2_b)
+
+# Imprimir los resultados
+print("Problema a: 3x - e^x = 0")
+print(f"  Método de Newton: x = {sol_a_newton:.5f}")
+print(f"  Método de la Secante: x = {sol_a_secant:.5f}")
+
+print("\nProblema b: 2x + 3 cos x - e^x = 0")
+print(f"  Método de Newton: x = {sol_b_newton:.5f}")
+print(f"  Método de la Secante: x = {sol_b_secant:.5f}")
